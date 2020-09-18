@@ -1,0 +1,46 @@
+{
+    "E2C3D09": {
+        "ASSISTS": "96",
+        "DEATHS": "102",
+        "DISCORD": "134493858150088704",
+        "KILLS": "56",
+        "LOSS": 1,
+        "SCORE": 25,
+        "SHOTS_REG": 8,
+        "TOTAL_SHOTS": 63,
+        "WIN": 0
+    },
+    "E3C9D02": {
+        "ASSISTS": "20",
+        "DEATHS": "240",
+        "DISCORD": "134493858150088888",
+        "KILLS": "130",
+        "LOSS": 0,
+        "SCORE": 20,
+        "SHOTS_REG": 1,
+        "TOTAL_SHOTS": 260,
+        "WIN": 1
+    },
+    "E3C9D55": {
+        "ASSISTS": "20",
+        "DEATHS": "240",
+        "DISCORD": "134493858150012345",
+        "KILLS": "130",
+        "LOSS": 0,
+        "SCORE": 5,
+        "SHOTS_REG": 5,
+        "TOTAL_SHOTS": 170,
+        "WIN": 1
+    },
+    "E3C9D66": {
+        "ASSISTS": "20",
+        "DEATHS": "240",
+        "DISCORD": "134493858150054321",
+        "KILLS": "130",
+        "LOSS": 0,
+        "SCORE": 15,
+        "SHOTS_REG": 4,
+        "TOTAL_SHOTS": 62,
+        "WIN": 1
+    }
+}

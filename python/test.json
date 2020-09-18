@@ -1,0 +1,222 @@
+{
+    "E2C3D09": {
+        "assault rifle": [
+            10,
+            0
+        ],
+        "assists": "96",
+        "deaths": "102",
+        "discord": "134493858150088704",
+        "flamethrower": [
+            10,
+            0
+        ],
+        "frag grenade": [
+            1,
+            0
+        ],
+        "kills": "56",
+        "mode": "ctf",
+        "name": "Devieth",
+        "needler": [
+            9,
+            0
+        ],
+        "pistol": [
+            2,
+            0
+        ],
+        "plasma pistol": [
+            6,
+            0
+        ],
+        "plasma rifle": [
+            4,
+            0
+        ],
+        "plasma_cannon": [
+            3,
+            0
+        ],
+        "rocket launcher": [
+            2,
+            8
+        ],
+        "score": "5",
+        "shotgun": [
+            15,
+            0
+        ],
+        "sniper rifle": [
+            1,
+            0
+        ],
+        "team": "red",
+        "won": -1
+    },
+    "E3C9D02": {
+        "assault rifle": [
+            100,
+            0
+        ],
+        "assists": "20",
+        "deaths": "240",
+        "discord": "134493858150088888",
+        "flamethrower": [
+            10,
+            0
+        ],
+        "frag grenade": [
+            3,
+            0
+        ],
+        "kills": "130",
+        "mode": "ctf",
+        "name": "Devieth2",
+        "needler": [
+            9,
+            0
+        ],
+        "pistol": [
+            2,
+            0
+        ],
+        "plasma pistol": [
+            6,
+            0
+        ],
+        "plasma rifle": [
+            4,
+            0
+        ],
+        "plasma_cannon": [
+            3,
+            0
+        ],
+        "rocket launcher": [
+            2,
+            0
+        ],
+        "score": "4",
+        "shotgun": [
+            120,
+            0
+        ],
+        "sniper rifle": [
+            1,
+            1
+        ],
+        "team": "red",
+        "won": 1
+    },
+    "E3C9D66": {
+        "assault rifle": [
+            10,
+            0
+        ],
+        "assists": "20",
+        "deaths": "240",
+        "discord": "134493858150054321",
+        "flamethrower": [
+            10,
+            0
+        ],
+        "frag grenade": [
+            1,
+            0
+        ],
+        "kills": "130",
+        "mode": "ctf",
+        "name": "Devieth2",
+        "needler": [
+            9,
+            0
+        ],
+        "pistol": [
+            2,
+            4
+        ],
+        "plasma pistol": [
+            5,
+            0
+        ],
+        "plasma rifle": [
+            4,
+            0
+        ],
+        "plasma_cannon": [
+            3,
+            0
+        ],
+        "rocket launcher": [
+            2,
+            0
+        ],
+        "score": "3",
+        "shotgun": [
+            15,
+            0
+        ],
+        "sniper rifle": [
+            1,
+            0
+        ],
+        "team": "red",
+        "won": 1
+    },
+    "E3C9D55": {
+        "assault rifle": [
+            10,
+            0
+        ],
+        "assists": "20",
+        "deaths": "240",
+        "discord": "134493858150012345",
+        "flamethrower": [
+            10,
+            0
+        ],
+        "frag grenade": [
+            1,
+            0
+        ],
+        "kills": "130",
+        "mode": "ctf",
+        "name": "Devieth2",
+        "needler": [
+            9,
+            5
+        ],
+        "pistol": [
+            2,
+            0
+        ],
+        "plasma pistol": [
+            6,
+            0
+        ],
+        "plasma rifle": [
+            4,
+            0
+        ],
+        "plasma_cannon": [
+            3,
+            0
+        ],
+        "rocket launcher": [
+            2,
+            0
+        ],
+        "score": "1",
+        "shotgun": [
+            122,
+            0
+        ],
+        "sniper rifle": [
+            1,
+            0
+        ],
+        "team": "red",
+        "won": 1
+    }
+}
