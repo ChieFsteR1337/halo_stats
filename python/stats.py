@@ -24,7 +24,19 @@ PLAYER_DICTIONARY = {
     'LOSS'        : 0
 }
 
-PLAYER_KEYS = ['DISCORD', 'KILLS', 'DEATHS', 'ASSISTS', 'SCORE', 'TOTAL_SHOTS', 'SHOTS_REG', 'WIN', 'LOSS']
+PLAYER_KEYS = ['NAME', 'SCORE', 'WIN', 'LOSS', 'KILLS', 'DEATHS', 'ASSISTS', 'TOTAL_SHOTS', 'SHOTS_REG']
+
+HTML_STATS = """
+<html>
+<head>
+<title>Halo Statistics</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1><center>Halo Statistics</center></h1>
+%s
+</body>
+</html>"""
 
 def read(data):
     """
@@ -39,6 +51,7 @@ def read(data):
         if len(data[UUID]['discord']) >= 4:
             #create a new player
             player = {}
+            player['NAME'] = data[UUID]['name']
             player['DISCORD'] = data[UUID]['discord']
             player['KILLS'] = data[UUID]['kills']
             player['DEATHS'] = data[UUID]['deaths']
@@ -89,9 +102,10 @@ def update(players, database=DATABASE):
             db_players[player_key] = players[player_key]
         else:
             #if the player does exist, update their data
+            db_players[player_key]['DISCORD'] = players[player_key]['DISCORD']
             for key in PLAYER_KEYS:
-                if key == 'DISCORD':
-                    db_players[player_key][key] = int(players[player_key][key])
+                if ((key == 'DISCORD') or (key == 'NAME')):
+                    db_players[player_key][key] = players[player_key][key]
                 else:
                     db_players[player_key][key] = int(db_players[player_key][key]) + int(players[player_key][key])
 
@@ -120,17 +134,19 @@ def output_html(database):
     #second, sort the players by highest rank first
     ranks.sort(key=lambda ranks: ranks[0], reverse=True)
 
-    #third, create a list of players to output
-    player_output = [PLAYER_KEYS]
+    #third, create a list of player stats to output
+    player_output = []
     for rank in ranks:
         player = []
+        player.append(rank[1])
         for key in PLAYER_KEYS:
             player.append(db_players[rank[1]][key])
         player_output.append(player)
 
     #fourth, output an html file
+    html_output = HTML_STATS % tabulate(player_output, ['UUID']+PLAYER_KEYS, tablefmt='html')
     with open('stats.html', 'w') as f:
-        f.write(tabulate(player_output, tablefmt='html'))
+        f.write(html_output)
 
 def main():
     """main program entry point"""
