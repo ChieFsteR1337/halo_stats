@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 DESCRIPTION = """
 Takes a halo stat .json input and updates a database.json.
 Then outputs an html file with the stats
@@ -10,19 +12,8 @@ import os
 import re
 from tabulate import tabulate
 
+HTML_PAGE = 'C:\\xampp\\htdocs\\index.html'
 DATABASE = '.\\database.json'
-
-PLAYER_DICTIONARY = {
-    'DISCORD'     : None,
-    'KILLS'       : 0,
-    'DEATHS'      : 0,
-    'ASSISTS'     : 0,
-    'SCORE'       : 0,
-    'TOTAL_SHOTS' : 0,
-    'SHOTS_REG'   : 0,
-    'WIN'         : 0,
-    'LOSS'        : 0
-}
 
 PLAYER_KEYS = ['NAME', 'SCORE', 'WIN', 'LOSS', 'KILLS', 'DEATHS', 'ASSISTS', 'TOTAL_SHOTS', 'SHOTS_REG']
 
@@ -61,7 +52,7 @@ def read(data):
             else:
                 player['SCORE'] = int(data[UUID]['score'])/2
             # read all weapons and add the total shots vs. shots reg
-            weapons = re.findall(r'\[\d+, \d+\]', str(data[UUID]))
+            weapons = re.findall(r'\[\d+,.*?\d+\]', str(data[UUID]))
             player['TOTAL_SHOTS'] = 0
             player['SHOTS_REG'] = 0
             for weapon in weapons:
@@ -93,21 +84,21 @@ def update(players, database=DATABASE):
         with open(database, 'w') as f: 
             db_players = {}
 
-    for player_key in players.keys():
+    for uuid in players.keys():
         #let's test to see if the player UUID exists
         try:
-            db_players[player_key]
+            db_players[uuid]
         except KeyError:
             #if the player doesn't exist, create them
-            db_players[player_key] = players[player_key]
+            db_players[uuid] = players[uuid]
         else:
             #if the player does exist, update their data
-            db_players[player_key]['DISCORD'] = players[player_key]['DISCORD']
+            db_players[uuid]['DISCORD'] = players[uuid]['DISCORD']
             for key in PLAYER_KEYS:
                 if ((key == 'DISCORD') or (key == 'NAME')):
-                    db_players[player_key][key] = players[player_key][key]
+                    db_players[uuid][key] = players[uuid][key]
                 else:
-                    db_players[player_key][key] = int(db_players[player_key][key]) + int(players[player_key][key])
+                    db_players[uuid][key] = int(db_players[uuid][key]) + int(players[uuid][key])
 
     #save the database
     with open(database, 'w') as f:
@@ -145,7 +136,7 @@ def output_html(database):
 
     #fourth, output an html file
     html_output = HTML_STATS % tabulate(player_output, ['UUID']+PLAYER_KEYS, tablefmt='html')
-    with open('stats.html', 'w') as f:
+    with open(HTML_PAGE, 'w') as f:
         f.write(html_output)
 
 def main():
@@ -163,7 +154,10 @@ def main():
             data = json.load(f)
             players = read(data)
     elif args.arg is not None:
-        players = read(json.loads(args.arg))
+        #convert php special characters
+        json_input = re.sub('%22', '"', args.arg)
+        json_input = re.sub('%20', ' ', json_input)
+        players = read(json.loads(json_input))
 
     update(players)
     output_html(DATABASE)
