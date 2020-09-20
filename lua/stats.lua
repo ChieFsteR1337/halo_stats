@@ -9,7 +9,7 @@ Player_UUID = {}
 Player_Stats = {}
 Weapon_Meta_IDs = {}
 -- API
-API_URL = "http://stats.halopc.com/report/script.php?"
+API_URL = ""
 -- Lib
 json = require "json"
 -- FFI
