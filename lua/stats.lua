@@ -1,3 +1,5 @@
+-- Halo server stat pharser by Devieth.
+
 -- Sapp
 api_version = "1.10.0.0"
 -- Table
