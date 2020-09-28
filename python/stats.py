@@ -12,14 +12,20 @@ import os
 import re
 from tabulate import tabulate
 
-HTML_PAGE = 'C:\\xampp\\htdocs\\index.html'
+#HTML_PAGE = 'C:\\xampp\\htdocs\\index.html'
+HTML_PAGE = '.\\index.html'
 DATABASE = '.\\database.json'
 
-PLAYER_KEYS = ['NAME', 'SCORE', 'WIN', 'LOSS', 'KILLS', 'DEATHS', 'ASSISTS', 'TOTAL_SHOTS', 'SHOTS_REG']
+PLAYER_KEYS = ['NAME', 'CTF_SCORE', 'SLAYER_SCORE', 'WIN', 'LOSS', 'KILLS', 'DEATHS', 'ASSISTS', 'TOTAL_SHOTS', 'SHOTS_REG']
 
 HTML_STATS = """
 <html>
 <head>
+<style>
+h1 {text-align: center;}
+p {text-align: center;}
+div {text-align: center;}
+</style>
 <title>Halo Statistics</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -27,7 +33,11 @@ HTML_STATS = """
 <h1><center>Halo Statistics</center></h1>
 %s
 </body>
-</html>"""
+<footer>
+<p>Designed by: ChieFsteR & Devieth</p>
+</footer>
+</html>
+"""
 
 def read(data):
     """
@@ -38,35 +48,35 @@ def read(data):
     players = {}
 
     for UUID in data.keys():
-        # if "discord" value is shorter than 4 characters then the stat update should be ignored for the UUID
-        if len(data[UUID]['discord']) >= 4:
-            #create a new player
-            player = {}
-            player['NAME'] = data[UUID]['name']
-            player['DISCORD'] = data[UUID]['discord']
-            player['KILLS'] = data[UUID]['kills']
-            player['DEATHS'] = data[UUID]['deaths']
-            player['ASSISTS'] = data[UUID]['assists']
-            if data[UUID]['mode'] == 'ctf':
-                player['SCORE'] = int(data[UUID]['score'])*5
-            else:
-                player['SCORE'] = int(data[UUID]['score'])/2
-            # read all weapons and add the total shots vs. shots reg
-            weapons = re.findall(r'\[\d+,.*?\d+\]', str(data[UUID]))
-            player['TOTAL_SHOTS'] = 0
-            player['SHOTS_REG'] = 0
-            for weapon in weapons:
-                #convert string representation of a list to a python list object
-                weapon_list = weapon.strip('][').split(', ')
-                player['TOTAL_SHOTS'] = player['TOTAL_SHOTS'] + int(weapon_list[0])
-                player['SHOTS_REG'] = player['SHOTS_REG'] + int(weapon_list[1])
-            if int(data[UUID]['won']) > 0:
-                player['WIN'] = 1
-                player['LOSS'] = 0
-            else:
-                player['WIN'] = 0
-                player['LOSS'] = 1
-            players[UUID] = player
+        #create a new player
+        player = {}
+        player['NAME'] = data[UUID]['name']
+        player['DISCORD'] = data[UUID]['discord']
+        player['KILLS'] = data[UUID]['kills']
+        player['DEATHS'] = data[UUID]['deaths']
+        player['ASSISTS'] = data[UUID]['assists']
+        if data[UUID]['mode'] == 'ctf':
+            player['CTF_SCORE'] = int(data[UUID]['score'])
+            player['SLAYER_SCORE'] = 0
+        else:
+            player['CTF_SCORE'] = 0
+            player['SLAYER_SCORE'] = int(data[UUID]['score'])
+        # read all weapons and add the total shots vs. shots reg
+        weapons = re.findall(r'\[\d+,.*?\d+\]', str(data[UUID]))
+        player['TOTAL_SHOTS'] = 0
+        player['SHOTS_REG'] = 0
+        for weapon in weapons:
+            #convert string representation of a list to a python list object
+            weapon_list = weapon.strip('][').split(', ')
+            player['TOTAL_SHOTS'] = player['TOTAL_SHOTS'] + int(weapon_list[0])
+            player['SHOTS_REG'] = player['SHOTS_REG'] + int(weapon_list[1])
+        if int(data[UUID]['won']) > 0:
+            player['WIN'] = 1
+            player['LOSS'] = 0
+        else:
+            player['WIN'] = 0
+            player['LOSS'] = 1
+        players[UUID] = player
 
     return players
 
@@ -107,7 +117,10 @@ def update(players, database=DATABASE):
 def player_rank(player):
     """Calculate a rank value for a player"""
 
-    return float(((player['WIN'] * 25.0) + player['SCORE']) - (player['LOSS'] * 10.0))
+    rank = float(((player['WIN'] * 25.0) + (player['CTF_SCORE'] * 5.0) + (player['SLAYER_SCORE'] / 2.0)) - (player['LOSS'] * 30.0))
+    if rank < 0:
+        rank = 0
+    return rank
 
 def output_html(database):
     """Take a database file and create an HTML file"""
@@ -129,13 +142,28 @@ def output_html(database):
     player_output = []
     for rank in ranks:
         player = []
-        player.append(rank[1])
-        for key in PLAYER_KEYS:
-            player.append(db_players[rank[1]][key])
+        player.append(rank[1])  #uuid are at element 1
+        player.append(rank[0])  #ranks are at element 0
+        player.append(db_players[rank[1]]['NAME'])
+        player.append(db_players[rank[1]]['CTF_SCORE'])
+        player.append(db_players[rank[1]]['SLAYER_SCORE'])
+        player.append(db_players[rank[1]]['WIN'])
+        player.append(db_players[rank[1]]['LOSS'])
+        try:
+            kdr = float(db_players[rank[1]]['KILLS'])/float(db_players[rank[1]]['DEATHS'])
+        except ZeroDivisionError:
+            kdr = db_players[rank[1]]['KILLS']/1
+        player.append(kdr)
+        try:
+            accuracy = (float(db_players[rank[1]]['SHOTS_REG'])/float(db_players[rank[1]]['TOTAL_SHOTS']))*100
+        except ZeroDivisionError:
+            accuracy = 0
+        player.append(str(int(accuracy))+'%')
         player_output.append(player)
 
     #fourth, output an html file
-    html_output = HTML_STATS % tabulate(player_output, ['UUID']+PLAYER_KEYS, tablefmt='html')
+    table_header = ['UUID', 'Rank Score', 'Alias', 'CTF Score', 'Slayer Score', 'Win', 'Loss', 'KDR', 'Accuracy']
+    html_output = HTML_STATS % tabulate(player_output, table_header, tablefmt='html', numalign="center", stralign="center")
     with open(HTML_PAGE, 'w') as f:
         f.write(html_output)
 
