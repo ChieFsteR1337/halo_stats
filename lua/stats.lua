@@ -1,3 +1,4 @@
+
 -- Halo server stat pharser by Devieth.
 
 -- Sapp
@@ -8,7 +9,7 @@ Player_UUID = {}
 Player_Stats = {}
 Weapon_Meta_IDs = {}
 -- API
-API_URL = "http://stats.halopc.com/stats" -- Placeholder
+API_URL = ""
 -- Lib
 json = require "json"
 -- FFI
@@ -71,10 +72,6 @@ function OnEventChat(PlayerIndex, Message, Mode)
 	elseif Mode == 9 then
 		Player_Discord_ID[PlayerIndex] = Message
 	end
-	if Mode == 1 then
-		local json_message = json.encode(Player_Stats)
-		print(json_message)
-	end
 end
 
 function OnGameStart()
@@ -118,8 +115,7 @@ function OnGameEnd()
 	local json_message = json.encode(Player_Stats)
 
 	-- Send message to stats server
-
-	--GetPage(API_URL.."?"..json_message, true)
+	GetPage(API_URL.."?"..json_message, true)
 
 	-- Cleanup
 	Weapon_Meta_IDs = {}
@@ -185,7 +181,7 @@ function OnEventDamageApplication(VictimIndex, PlayerIndex, MetaID, Damage, HitS
 			if Weapon_Meta_IDs[1] then
 				for i = 1,#Weapon_Meta_IDs do
 					if MetaID == Weapon_Meta_IDs[i][1] then
-						count_weapon_accuracy(Player_UUID[PlayerIndex], Weapon_Meta_IDs[i][2], 1)
+						count_weapon_accuracy(Player_UUID[PlayerIndex], Weapon_Meta_IDs[i][2], 2)
 						break
 					end
 				end
